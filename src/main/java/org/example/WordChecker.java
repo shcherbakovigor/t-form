@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -10,25 +11,28 @@ public class WordChecker {
 
         List<String> wordList = new ArrayList<>();// word record
 
-        for (int i = 0; i < 20; i++) {
-            wordList.add("する");
+        try (BufferedReader br = new BufferedReader(new FileReader("./words.csv"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                wordList.add(line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         Random random = new Random();
 
-
         Scanner scanner = new Scanner(System.in);
-        for (int i = 0; i < 10; i++) {
-            int randomIndex = random.nextInt(12);
+        for (;;) {
+            int randomIndex = random.nextInt(wordList.size()-1);
 
             String wordForCheck = wordList.get(randomIndex);
-            System.out.println(wordForCheck);
-            System.out.println(TeFormConvertor.convert(wordForCheck));
-            System.out.println(randomIndex);
+            System.out.print(wordForCheck);
             scanner.nextLine();
-
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+            System.out.println(TeFormConvertor.convert(wordForCheck));
+            scanner.nextLine();
 
         }
     }
